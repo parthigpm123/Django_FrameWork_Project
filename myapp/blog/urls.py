@@ -7,7 +7,7 @@ app_name = 'blog'
 urlpatterns = [
       path("", views.index, name='index'),
       
-      path("post/<int:post_id>", views.detail, name='detail'),
+      path("post/<slug:slug>", views.detail, name='detail'),
       
       #path('new_url', views.new_url, name='new_url'),
 
