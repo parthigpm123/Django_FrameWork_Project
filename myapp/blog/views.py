@@ -4,6 +4,7 @@ from django.urls import reverse
 import logging
 from .models import Post
 from django.http import Http404
+from django.core.paginator import Paginator
 
 # Create your views here.
 #static demo data
@@ -18,9 +19,16 @@ from django.http import Http404
 def index(request):
       blog_title = "Latest Posts"
       #Getting data from model
-      Posts=Post.objects.all()
+      all_Posts=Post.objects.all()
+      
+      #pagination
+      paginator = Paginator(all_Posts, 5)
+      page_number = request.GET.get('page') 
+      page_obj = paginator.get_page(page_number)
+      
+      
 
-      return render(request,'index.html',{'blog_title':blog_title,'posts':Posts})
+      return render(request,'index.html',{'blog_title':blog_title, 'page_obj': page_obj})
 #Dynamic URL handling with parameter
 def detail(request, slug):
       #static data
@@ -28,12 +36,13 @@ def detail(request, slug):
       try:
       #Getting data from model by post id
           post = Post.objects.get(slug=slug)
+          related_posts = Post.objects.filter(category=post.category).exclude(pk=post.id)
       except Post.DoesNotExist:
             raise Http404("Post does not exist!!")  
      
       # logger = logging.getLogger('TestLogger')
       # logger.debug(f"post variable is {post}")
-      return render(request,'detail.html',{'post': post})
+      return render(request,'detail.html',{'post': post, 'related_posts': related_posts})
  
 
 def old_url_redirect(request, post_id):
