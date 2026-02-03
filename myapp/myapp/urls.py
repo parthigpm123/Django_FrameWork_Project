@@ -21,7 +21,7 @@ from demo import views
 handler404 = 'myapp.views.custom_page_not_found'
 
 urlpatterns = [
-    path("blog/", include('blog.urls')),
+    path("", include('blog.urls')),
     
     path('admin/', admin.site.urls),
     path('blog2/', include('blog2.urls')),
